@@ -552,7 +552,10 @@ class LaserSystemController(QObject):
             self.scanning = True
             # 重置数据缓冲区
             self.power_buffer = []
-            self.alarm_triggered.emit("初始化内存数据缓冲区")
+            # 重置数据矩阵，防止新数据与旧数据混合
+            if hasattr(self, 'power_matrix'):
+                self.power_matrix = np.zeros((0, 0))
+            self.alarm_triggered.emit("初始化内存数据缓冲区和数据矩阵")
             
             # 检查设备连接状态
             if not hasattr(self, 'laser') or not hasattr(self, 'analyzer'):
